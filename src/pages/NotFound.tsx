@@ -28,7 +28,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className="cosmic-gradient min-h-screen">
+    <div className="bg-gradient-to-br from-violet-50 to-indigo-100 min-h-screen">
       <div className="h-12"></div>
 
       <header className="px-6 py-4">
@@ -37,7 +37,7 @@ const NotFound = () => {
             variant="ghost"
             size="icon"
             onClick={handleGoBack}
-            className="w-10 h-10 rounded-full bg-white/80 glass-effect border border-violet-200 shadow-lg hover:bg-white"
+            className="w-10 h-10 rounded-full bg-white/80 backdrop-filter backdrop-blur-20 border border-violet-200 shadow-lg hover:bg-white"
           >
             <ArrowLeft className="w-4 h-4 text-violet-600" />
           </Button>
@@ -50,7 +50,7 @@ const NotFound = () => {
         
         <section className="text-center mb-8">
           <div className="relative">
-            <div className="w-48 h-48 mx-auto mb-6 rounded-full bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center shadow-violet">
+            <div className="w-48 h-48 mx-auto mb-6 rounded-full bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center shadow-[0_10px_25px_rgba(102,126,234,0.15)]">
               <img 
                 className="w-32 h-32 object-cover rounded-full" 
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fc091a7444-8005f32b40fb7eaaec50.png" 
@@ -84,7 +84,7 @@ const NotFound = () => {
         <section className="w-full max-w-sm">
           <Button
             onClick={handleGoHome}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 px-6 rounded-2xl shadow-violet transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 px-6 rounded-2xl shadow-[0_10px_25px_rgba(102,126,234,0.15)] transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3"
             size="lg"
           >
             <Home className="w-4 h-4" />
@@ -96,7 +96,7 @@ const NotFound = () => {
           <Button
             onClick={handleGoBack}
             variant="outline"
-            className="w-full bg-white/80 glass-effect border border-violet-200 text-violet-700 font-medium py-3 px-6 rounded-xl shadow-lg hover:bg-white flex items-center justify-center space-x-3"
+            className="w-full bg-white/80 backdrop-filter backdrop-blur-20 border border-violet-200 text-violet-700 font-medium py-3 px-6 rounded-xl shadow-lg hover:bg-white flex items-center justify-center space-x-3"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Go Back</span>
@@ -105,7 +105,7 @@ const NotFound = () => {
           <Button
             onClick={handleTryAgain}
             variant="outline"
-            className="w-full bg-white/80 glass-effect border border-violet-200 text-violet-700 font-medium py-3 px-6 rounded-xl shadow-lg hover:bg-white flex items-center justify-center space-x-3"
+            className="w-full bg-white/80 backdrop-filter backdrop-blur-20 border border-violet-200 text-violet-700 font-medium py-3 px-6 rounded-xl shadow-lg hover:bg-white flex items-center justify-center space-x-3"
           >
             <RotateCcw className="w-4 h-4" />
             <span>Try Again</span>
