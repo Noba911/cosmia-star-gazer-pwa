@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ArrowLeft, Key, PaperPlane, Mail } from 'lucide-react';
+import { ArrowLeft, Key, Send, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -107,7 +106,7 @@ const ForgotPassword = () => {
                     </>
                   ) : (
                     <>
-                      <PaperPlane className="h-4 w-4 mr-2" />
+                      <Send className="h-4 w-4 mr-2" />
                       Send Reset Link
                     </>
                   )}
