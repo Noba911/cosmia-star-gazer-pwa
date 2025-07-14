@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +12,7 @@ import Settings from "./pages/Settings";
 import AboutUs from "./pages/AboutUs";
 import Offline from "./pages/Offline";
 import NotFound from "./pages/NotFound";
+import AIGeneration from "./pages/AIGeneration";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,7 @@ const App = () => (
           <Route path="/settings" element={<Settings />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/offline" element={<Offline />} />
+          <Route path="/ai-generation" element={<AIGeneration />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
