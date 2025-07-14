@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -92,6 +91,7 @@ const Login = () => {
             <div className="text-right">
               <button
                 type="button"
+                onClick={() => navigate('/forgot-password')}
                 className="text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors cursor-pointer"
               >
                 Forgot password?
