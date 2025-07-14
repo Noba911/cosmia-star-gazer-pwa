@@ -1,12 +1,13 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Home, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ContactModal from "@/components/ContactModal";
 
 const NotFound = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     console.error(
@@ -25,6 +26,14 @@ const NotFound = () => {
 
   const handleTryAgain = () => {
     window.location.reload();
+  };
+
+  const handleOpenContact = () => {
+    setIsContactModalOpen(true);
+  };
+
+  const handleCloseContact = () => {
+    setIsContactModalOpen(false);
   };
 
   return (
@@ -117,8 +126,18 @@ const NotFound = () => {
       <footer className="px-6 py-6 text-center">
         <div className="space-y-3">
           <div className="flex justify-center space-x-6">
-            <span className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer">Help</span>
-            <span className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer">Contact</span>
+            <button 
+              onClick={handleOpenContact}
+              className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer"
+            >
+              Help
+            </button>
+            <button 
+              onClick={handleOpenContact}
+              className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer"
+            >
+              Contact
+            </button>
           </div>
           
           <div className="pt-2">
@@ -128,6 +147,11 @@ const NotFound = () => {
       </footer>
 
       <div className="h-8"></div>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={handleCloseContact} 
+      />
     </div>
   );
 };
