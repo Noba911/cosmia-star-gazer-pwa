@@ -1,5 +1,6 @@
 
 import { Star, Sparkles, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import HoroscopeCard from "../components/HoroscopeCard";
 import SocialLoginButton from "../components/SocialLoginButton";
 
@@ -22,20 +23,41 @@ const horoscopeData = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const handleSignUp = () => {
     console.log("Sign up clicked");
+    navigate("/register");
   };
 
   const handleLogin = () => {
     console.log("Login clicked");
+    navigate("/login");
   };
 
   const handleGoogleLogin = () => {
     console.log("Google login clicked");
+    // Add Google OAuth logic here
   };
 
   const handleAppleLogin = () => {
     console.log("Apple login clicked");
+    // Add Apple OAuth logic here
+  };
+
+  const handlePrivacyPolicy = () => {
+    console.log("Privacy Policy clicked");
+    // Navigate to privacy policy page or open modal
+  };
+
+  const handleTermsOfUse = () => {
+    console.log("Terms of Use clicked");
+    // Navigate to terms page or open modal
+  };
+
+  const handleContact = () => {
+    console.log("Contact clicked");
+    // Navigate to contact page or open modal
   };
 
   return (
@@ -142,9 +164,24 @@ const Index = () => {
       <footer className="px-6 py-8 text-center">
         <div className="space-y-4">
           <div className="flex flex-col space-y-3">
-            <span className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer">Terms of Use</span>
-            <span className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer">Contact</span>
+            <button 
+              onClick={handlePrivacyPolicy}
+              className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <button 
+              onClick={handleTermsOfUse}
+              className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer"
+            >
+              Terms of Use
+            </button>
+            <button 
+              onClick={handleContact}
+              className="text-violet-600 font-medium text-sm hover:text-violet-700 transition-colors cursor-pointer"
+            >
+              Contact
+            </button>
           </div>
           
           <div className="pt-4 border-t border-violet-200">
