@@ -11,23 +11,119 @@ const Home = () => {
   const [cosmicTipDate, setCosmicTipDate] = useState(new Date());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Horoscope content based on style
-  const getHoroscopeContent = (style: string) => {
-    const contents = {
-      "Poetic": {
+  // Horoscope content based on style and date
+  const getHoroscopeContent = (style: string, date: Date) => {
+    const dayIndex = date.getDate() % 7; // Use date to vary content
+    
+    const poeticContent = [
+      {
         quote: "The stars align to illuminate your path today, dear Leo. Your natural charisma shines brighter than ever, drawing opportunities and meaningful connections your way. Trust in your inner fire and let your creativity flow freely.",
         description: "Today brings a surge of creative energy that will help you tackle challenges with confidence. Focus on personal relationships and don't hesitate to express your feelings openly."
       },
-      "Classic": {
+      {
+        quote: "Mercury dances through your sector of dreams, Leo, awakening dormant passions within your heart. The universe whispers secrets of transformation as you stand at the threshold of new beginnings.",
+        description: "A powerful shift in perspective awaits you today. Listen to your intuition and embrace the changes coming your way. Your courage will be your greatest asset."
+      },
+      {
+        quote: "Venus graces your house of abundance, dear fire sign, blessing you with magnetic charm and irresistible appeal. Your golden energy attracts prosperity in all its forms.",
+        description: "Focus on collaboration and partnership today. Your natural leadership qualities will inspire others to join your vision. Romance and creativity are especially favored."
+      },
+      {
+        quote: "The cosmic winds carry messages of wisdom to your eager spirit, Leo. Jupiter's benevolent gaze upon you opens doors that seemed forever closed.",
+        description: "Expansion and growth are the themes of your day. Take calculated risks and trust in your ability to manifest your dreams into reality."
+      },
+      {
+        quote: "Mars ignites your inner warrior, brave Leo, filling you with determination to conquer any mountain before you. Your strength knows no bounds today.",
+        description: "Channel your fiery energy into productive pursuits. Physical activity and bold action will bring excellent results. Stand tall in your power."
+      },
+      {
+        quote: "The Moon reflects your inner royalty, magnificent Leo, reminding you of the crown you were born to wear. Your time to shine has arrived.",
+        description: "Recognition and appreciation come your way today. Don't shy away from the spotlight - you were meant to inspire others with your radiant presence."
+      },
+      {
+        quote: "Saturn's wisdom guides your noble heart, teaching patience as your greatest virtue. Like a lion surveying its kingdom, you see the bigger picture clearly.",
+        description: "Take time for reflection and planning today. Your natural wisdom and maturity will help you make important decisions that benefit your long-term goals."
+      }
+    ];
+
+    const classicContent = [
+      {
         quote: "Today is a favorable day for Leo natives. Your leadership qualities will be recognized and appreciated. Financial gains are possible through creative ventures or partnerships.",
         description: "Career prospects look promising with potential for advancement. Health remains stable. Lucky numbers: 3, 7, 21. Lucky color: Golden yellow."
       },
-      "Daily Tip": {
+      {
+        quote: "Leo individuals will experience positive developments in personal relationships. Communication with family members brings harmony to your domestic sphere.",
+        description: "Business negotiations favor you today. Avoid major investments but small purchases bring satisfaction. Lucky numbers: 1, 8, 15. Lucky color: Orange."
+      },
+      {
+        quote: "Your natural magnetism attracts new opportunities in both professional and personal areas. Creative projects receive favorable cosmic support.",
+        description: "Travel plans made today will prove beneficial. Health requires attention to diet and exercise. Lucky numbers: 5, 12, 28. Lucky color: Red."
+      },
+      {
+        quote: "Leadership roles and positions of authority are highlighted for Leo today. Your confidence inspires trust and cooperation from others.",
+        description: "Financial planning brings positive results. Romantic relationships experience growth and understanding. Lucky numbers: 2, 9, 17. Lucky color: Gold."
+      },
+      {
+        quote: "Educational pursuits and skill development receive cosmic blessing. Leo natives will find learning comes easily and naturally today.",
+        description: "Property matters and home improvements are favored. Avoid arguments and maintain diplomatic approach. Lucky numbers: 4, 11, 23. Lucky color: Yellow."
+      },
+      {
+        quote: "Artistic and creative endeavors bring recognition and possible monetary rewards. Your talents are noticed by influential people.",
+        description: "Health shows improvement if you've been dealing with minor issues. Social gatherings bring joy. Lucky numbers: 6, 14, 26. Lucky color: Amber."
+      },
+      {
+        quote: "Professional partnerships and collaborations prove highly beneficial. Your expertise and experience are valued by colleagues and superiors.",
+        description: "Legal matters resolve in your favor. Long-distance relationships receive positive cosmic energy. Lucky numbers: 10, 19, 30. Lucky color: Copper."
+      }
+    ];
+
+    const dailyTipContent = [
+      {
         quote: "Quick Leo tip for today: Start your morning with a 5-minute meditation to channel your fiery energy positively throughout the day.",
         description: "Focus action: Have that important conversation you've been postponing. Your natural confidence will help you express yourself clearly and persuasively."
+      },
+      {
+        quote: "Leo energy boost: Wear something that makes you feel powerful today. Your outer confidence will reflect your inner strength.",
+        description: "Focus action: Take the lead on a project or initiative. Your leadership skills are particularly strong right now and others will follow your guidance."
+      },
+      {
+        quote: "Creative Leo tip: Spend 10 minutes doing something artistic - sketch, write, or create music. Your creative energy needs an outlet today.",
+        description: "Focus action: Compliment someone genuinely. Your generous spirit will create positive ripples that benefit everyone around you."
+      },
+      {
+        quote: "Leo wellness tip: Take a walk in nature or spend time in sunlight. Your fire element needs natural energy to stay balanced.",
+        description: "Focus action: Organize one area of your living space. Creating order in your environment will help clarify your thoughts and goals."
+      },
+      {
+        quote: "Social Leo tip: Reach out to a friend you haven't spoken to in a while. Your warm energy will rekindle meaningful connections.",
+        description: "Focus action: Practice gratitude by writing down three things you're thankful for. This will amplify your natural optimism and attract more positivity."
+      },
+      {
+        quote: "Confident Leo tip: Stand tall and make eye contact in all your interactions today. Your presence commands respect and attention.",
+        description: "Focus action: Try something slightly outside your comfort zone. Your courage and adaptability will help you grow and learn something new."
+      },
+      {
+        quote: "Generous Leo tip: Perform one act of kindness without expecting anything in return. Your giving nature will create beautiful karma.",
+        description: "Focus action: Set a small, achievable goal for tomorrow. Your natural determination will help you follow through and build momentum."
       }
-    };
-    return contents[style] || contents["Poetic"];
+    ];
+
+    let selectedContent;
+    switch (style) {
+      case "Poetic":
+        selectedContent = poeticContent[dayIndex];
+        break;
+      case "Classic":
+        selectedContent = classicContent[dayIndex];
+        break;
+      case "Daily Tip":
+        selectedContent = dailyTipContent[dayIndex];
+        break;
+      default:
+        selectedContent = poeticContent[dayIndex];
+    }
+
+    return selectedContent;
   };
 
   // Cosmic tip content based on date
@@ -127,7 +223,7 @@ const Home = () => {
     navigate('/ai-generation');
   };
 
-  const currentContent = getHoroscopeContent(activeStyle);
+  const currentContent = getHoroscopeContent(activeStyle, currentDate);
   const isNextDayDisabled = () => {
     const nextDay = new Date(currentDate);
     nextDay.setDate(currentDate.getDate() + 1);
