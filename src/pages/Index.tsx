@@ -1,8 +1,9 @@
-
+import { useState } from "react";
 import { Star, Sparkles, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import HoroscopeCard from "../components/HoroscopeCard";
 import SocialLoginButton from "../components/SocialLoginButton";
+import ContactModal from "../components/ContactModal";
 
 const horoscopeData = [
   {
@@ -24,6 +25,7 @@ const horoscopeData = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const handleSignUp = () => {
     console.log("Sign up clicked");
@@ -38,26 +40,30 @@ const Index = () => {
   const handleGoogleLogin = () => {
     console.log("Google login clicked");
     // Add Google OAuth logic here
+    navigate("/home");
   };
 
   const handleAppleLogin = () => {
     console.log("Apple login clicked");
     // Add Apple OAuth logic here
+    navigate("/home");
   };
 
   const handlePrivacyPolicy = () => {
     console.log("Privacy Policy clicked");
     // Navigate to privacy policy page or open modal
+    // For now, we'll just log it - you can create a privacy page later
   };
 
   const handleTermsOfUse = () => {
     console.log("Terms of Use clicked");
     // Navigate to terms page or open modal
+    // For now, we'll just log it - you can create a terms page later
   };
 
   const handleContact = () => {
     console.log("Contact clicked");
-    // Navigate to contact page or open modal
+    setIsContactModalOpen(true);
   };
 
   return (
@@ -193,6 +199,12 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Contact Modal */}
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
 
       {/* Bottom buffer */}
       <div className="h-8"></div>

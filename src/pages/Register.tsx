@@ -45,7 +45,20 @@ const Register = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Registration form submitted:', formData);
-    // Handle registration logic here
+    // Handle registration logic here - for now navigate to home
+    navigate('/home');
+  };
+
+  const handleGoogleLogin = () => {
+    console.log("Google registration clicked");
+    // Add Google OAuth logic here
+    navigate('/home');
+  };
+
+  const handleAppleLogin = () => {
+    console.log("Apple registration clicked");
+    // Add Apple OAuth logic here
+    navigate('/home');
   };
 
   return (
@@ -235,11 +248,13 @@ const Register = () => {
               icon={<i className="fa-brands fa-google text-red-500"></i>}
               text="Continue with Google"
               variant="google"
+              onClick={handleGoogleLogin}
             />
             <SocialLoginButton
               icon={<i className="fa-brands fa-apple"></i>}
               text="Continue with Apple"
               variant="apple"
+              onClick={handleAppleLogin}
             />
           </div>
         </section>
@@ -247,7 +262,7 @@ const Register = () => {
         <section className="text-center mb-8">
           <span className="text-violet-600">Already have an account? </span>
           <button
-            onClick={() => {/* Handle navigation to login */}}
+            onClick={() => navigate('/login')}
             className="text-violet-700 font-semibold underline cursor-pointer hover:text-violet-800"
           >
             Log In

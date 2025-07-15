@@ -1,12 +1,24 @@
 
 import { useState } from "react";
 import { Home as HomeIcon, Settings, Info, ChevronLeft, ChevronRight, Sparkles, Menu, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [activeStyle, setActiveStyle] = useState("Poetic");
 
   const handleStyleSwitch = (style: string) => {
     setActiveStyle(style);
+  };
+
+  const handlePreviousDay = () => {
+    console.log("Previous day clicked");
+    // Add logic to show previous day's horoscope
+  };
+
+  const handleNextDay = () => {
+    console.log("Next day clicked - disabled for future dates");
+    // Tomorrow button is disabled in UI
   };
 
   return (
@@ -133,12 +145,18 @@ const Home = () => {
             <span className="text-xs font-medium">Home</span>
           </button>
           
-          <button className="flex flex-col items-center space-y-1 text-gray-400 hover:text-violet-600 transition-colors">
+          <button 
+            onClick={() => navigate('/settings')}
+            className="flex flex-col items-center space-y-1 text-gray-400 hover:text-violet-600 transition-colors"
+          >
             <Settings className="w-5 h-5" />
             <span className="text-xs font-medium">Settings</span>
           </button>
           
-          <button className="flex flex-col items-center space-y-1 text-gray-400 hover:text-violet-600 transition-colors">
+          <button 
+            onClick={() => navigate('/about')}
+            className="flex flex-col items-center space-y-1 text-gray-400 hover:text-violet-600 transition-colors"
+          >
             <Info className="w-5 h-5" />
             <span className="text-xs font-medium">About</span>
           </button>

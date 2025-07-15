@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,20 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login form submitted:', formData);
-    // Handle login logic here
+    // Handle login logic here - for now navigate to home
+    navigate('/home');
+  };
+
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
+    // Add Google OAuth logic here
+    navigate('/home');
+  };
+
+  const handleAppleLogin = () => {
+    console.log("Apple login clicked");
+    // Add Apple OAuth logic here
+    navigate('/home');
   };
 
   return (
@@ -124,11 +138,13 @@ const Login = () => {
               icon={<i className="fa-brands fa-google text-red-500"></i>}
               text="Continue with Google"
               variant="google"
+              onClick={handleGoogleLogin}
             />
             <SocialLoginButton
               icon={<i className="fa-brands fa-apple"></i>}
               text="Continue with Apple"
               variant="apple"
+              onClick={handleAppleLogin}
             />
           </div>
         </section>
