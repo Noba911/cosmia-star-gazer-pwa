@@ -1,13 +1,15 @@
-
 import { useState } from "react";
-import { Home as HomeIcon, Settings, Info, ChevronLeft, ChevronRight, Sparkles, Menu, Star } from "lucide-react";
+import { Home as HomeIcon, Settings, Info, ChevronLeft, ChevronRight, Sparkles, Menu, Star, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
   const navigate = useNavigate();
   const [activeStyle, setActiveStyle] = useState("Poetic");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [cosmicTipDate, setCosmicTipDate] = useState(new Date());
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Horoscope content based on style
   const getHoroscopeContent = (style: string) => {
@@ -101,8 +103,23 @@ const Home = () => {
   };
 
   const handleMenuClick = () => {
-    console.log("Menu clicked");
-    // Could open a dropdown menu or navigation drawer
+    setIsMenuOpen(true);
+    console.log("Menu opened");
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+    console.log("Menu closed");
+  };
+
+  const handleNavigateToSettings = () => {
+    setIsMenuOpen(false);
+    navigate('/settings');
+  };
+
+  const handleNavigateToAbout = () => {
+    setIsMenuOpen(false);
+    navigate('/about');
   };
 
   const handleGenerateNewHoroscope = () => {
@@ -144,6 +161,35 @@ const Home = () => {
           </button>
         </div>
       </header>
+
+      {/* Menu Modal */}
+      <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <DialogContent className="bg-white/95 glass-effect border-violet-200 shadow-violet max-w-sm mx-auto">
+          <DialogHeader className="pb-4">
+            <DialogTitle className="text-xl font-bold text-violet-800 text-center">Menu</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-3">
+            <Button
+              onClick={handleNavigateToSettings}
+              variant="ghost"
+              className="w-full bg-white/80 glass-effect border border-violet-200 rounded-2xl p-4 h-auto flex items-center justify-start hover:bg-white transition-all duration-300 shadow-sm"
+            >
+              <Settings className="h-5 w-5 text-violet-500 mr-4" />
+              <span className="text-violet-800 font-medium">Settings</span>
+            </Button>
+
+            <Button
+              onClick={handleNavigateToAbout}
+              variant="ghost"
+              className="w-full bg-white/80 glass-effect border border-violet-200 rounded-2xl p-4 h-auto flex items-center justify-start hover:bg-white transition-all duration-300 shadow-sm"
+            >
+              <Info className="h-5 w-5 text-violet-500 mr-4" />
+              <span className="text-violet-800 font-medium">About Us</span>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <main className="px-6 pb-24">
         {/* Date Section */}
