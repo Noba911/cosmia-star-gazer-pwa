@@ -6,21 +6,98 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   const [activeStyle, setActiveStyle] = useState("Poetic");
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [cosmicTipDate, setCosmicTipDate] = useState(new Date());
+
+  // Horoscope content based on style
+  const getHoroscopeContent = (style: string) => {
+    const contents = {
+      "Poetic": {
+        quote: "The stars align to illuminate your path today, dear Leo. Your natural charisma shines brighter than ever, drawing opportunities and meaningful connections your way. Trust in your inner fire and let your creativity flow freely.",
+        description: "Today brings a surge of creative energy that will help you tackle challenges with confidence. Focus on personal relationships and don't hesitate to express your feelings openly."
+      },
+      "Classic": {
+        quote: "Today is a favorable day for Leo natives. Your leadership qualities will be recognized and appreciated. Financial gains are possible through creative ventures or partnerships.",
+        description: "Career prospects look promising with potential for advancement. Health remains stable. Lucky numbers: 3, 7, 21. Lucky color: Golden yellow."
+      },
+      "Daily Tip": {
+        quote: "Quick Leo tip for today: Start your morning with a 5-minute meditation to channel your fiery energy positively throughout the day.",
+        description: "Focus action: Have that important conversation you've been postponing. Your natural confidence will help you express yourself clearly and persuasively."
+      }
+    };
+    return contents[style] || contents["Poetic"];
+  };
+
+  // Cosmic tip content based on date
+  const getCosmicTip = (date: Date) => {
+    const tips = [
+      "Mercury's alignment suggests this is the perfect time to have that important conversation you've been putting off.",
+      "Venus in your sector encourages you to express your creative side today. Start that artistic project you've been dreaming about.",
+      "Mars energy is strong today - channel it into physical activities or tackling challenging tasks with determination.",
+      "Jupiter's influence brings expansion opportunities. Say yes to new experiences and broaden your horizons.",
+      "Saturn reminds you to focus on long-term goals. Take a practical step toward your biggest dream today."
+    ];
+    return tips[date.getDate() % tips.length];
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatShortDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
 
   const handleStyleSwitch = (style: string) => {
     setActiveStyle(style);
     console.log(`Switched to ${style} style`);
-    // Here you could trigger a re-generation of the horoscope with the new style
   };
 
   const handlePreviousDay = () => {
-    console.log("Previous day clicked - showing yesterday's horoscope");
-    // Add logic to show previous day's horoscope
+    const previousDay = new Date(currentDate);
+    previousDay.setDate(currentDate.getDate() - 1);
+    setCurrentDate(previousDay);
+    console.log(`Showing horoscope for ${formatDate(previousDay)}`);
   };
 
   const handleNextDay = () => {
-    console.log("Next day clicked - disabled for future dates");
-    // Tomorrow button is disabled in UI
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(currentDate.getDate() + 1);
+    const today = new Date();
+    if (nextDay <= today) {
+      setCurrentDate(nextDay);
+      console.log(`Showing horoscope for ${formatDate(nextDay)}`);
+    } else {
+      console.log("Cannot show future horoscopes");
+    }
+  };
+
+  const handleCosmicTipPrevious = () => {
+    const previousDay = new Date(cosmicTipDate);
+    previousDay.setDate(cosmicTipDate.getDate() - 1);
+    setCosmicTipDate(previousDay);
+    console.log(`Showing cosmic tip for ${formatDate(previousDay)}`);
+  };
+
+  const handleCosmicTipNext = () => {
+    const nextDay = new Date(cosmicTipDate);
+    nextDay.setDate(cosmicTipDate.getDate() + 1);
+    const today = new Date();
+    if (nextDay <= today) {
+      setCosmicTipDate(nextDay);
+      console.log(`Showing cosmic tip for ${formatDate(nextDay)}`);
+    } else {
+      console.log("Cannot show future cosmic tips");
+    }
   };
 
   const handleMenuClick = () => {
@@ -31,6 +108,19 @@ const Home = () => {
   const handleGenerateNewHoroscope = () => {
     console.log("Generating new horoscope...");
     navigate('/ai-generation');
+  };
+
+  const currentContent = getHoroscopeContent(activeStyle);
+  const isNextDayDisabled = () => {
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(currentDate.getDate() + 1);
+    return nextDay > new Date();
+  };
+
+  const isCosmicTipNextDisabled = () => {
+    const nextDay = new Date(cosmicTipDate);
+    nextDay.setDate(cosmicTipDate.getDate() + 1);
+    return nextDay > new Date();
   };
 
   return (
@@ -45,7 +135,7 @@ const Home = () => {
           <Star className="w-4 h-4 text-violet-500" />
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-xs text-violet-600 font-medium">Mon, July 14</span>
+          <span className="text-xs text-violet-600 font-medium">{formatShortDate(currentDate)}</span>
           <button 
             onClick={handleMenuClick}
             className="p-2 text-violet-600 hover:text-violet-700 transition-colors"
@@ -59,8 +149,10 @@ const Home = () => {
         {/* Date Section */}
         <section className="mb-6">
           <div className="text-center">
-            <h2 className="text-lg font-semibold text-violet-800 mb-1">Today's Horoscope</h2>
-            <p className="text-sm text-violet-600">Monday, July 14, 2025</p>
+            <h2 className="text-lg font-semibold text-violet-800 mb-1">
+              {currentDate.toDateString() === new Date().toDateString() ? "Today's Horoscope" : "Horoscope"}
+            </h2>
+            <p className="text-sm text-violet-600">{formatDate(currentDate)}</p>
           </div>
         </section>
 
@@ -79,13 +171,15 @@ const Home = () => {
             </div>
             
             <div className="space-y-4">
-              <blockquote className="text-gray-700 leading-relaxed text-center italic">
-                "The stars align to illuminate your path today, dear Leo. Your natural charisma shines brighter than ever, drawing opportunities and meaningful connections your way. Trust in your inner fire and let your creativity flow freely."
+              <blockquote className={`text-gray-700 leading-relaxed text-center ${
+                activeStyle === "Poetic" ? "italic" : "font-medium"
+              }`}>
+                "{currentContent.quote}"
               </blockquote>
               
               <div className="bg-violet-50 rounded-2xl p-4 border border-violet-200">
                 <p className="text-sm text-violet-700 leading-relaxed">
-                  Today brings a surge of creative energy that will help you tackle challenges with confidence. Focus on personal relationships and don't hesitate to express your feelings openly.
+                  {currentContent.description}
                 </p>
               </div>
             </div>
@@ -120,12 +214,36 @@ const Home = () => {
         {/* Cosmic Tip */}
         <section className="mb-8">
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-5 shadow-violet">
-            <div className="flex items-center mb-3">
-              <Sparkles className="w-5 h-5 text-white mr-2" />
-              <h4 className="text-white font-semibold">Cosmic Tip of the Day</h4>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center">
+                <Sparkles className="w-5 h-5 text-white mr-2" />
+                <h4 className="text-white font-semibold">Cosmic Tip</h4>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleCosmicTipPrevious}
+                  className="p-1 text-white/80 hover:text-white transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleCosmicTipNext}
+                  disabled={isCosmicTipNextDisabled()}
+                  className={`p-1 transition-colors ${
+                    isCosmicTipNextDisabled() 
+                      ? "text-white/40 cursor-not-allowed" 
+                      : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <p className="text-white/90 text-sm leading-relaxed">
-              Mercury's alignment suggests this is the perfect time to have that important conversation you've been putting off.
+            <p className="text-white/90 text-sm leading-relaxed mb-2">
+              {getCosmicTip(cosmicTipDate)}
+            </p>
+            <p className="text-white/70 text-xs">
+              {formatDate(cosmicTipDate)}
             </p>
           </div>
         </section>
@@ -149,8 +267,12 @@ const Home = () => {
             
             <button 
               onClick={handleNextDay}
-              className="flex items-center space-x-2 text-gray-400 font-medium py-3 px-4 rounded-xl bg-gray-100 border border-gray-200 shadow-sm cursor-not-allowed opacity-50"
-              disabled
+              disabled={isNextDayDisabled()}
+              className={`flex items-center space-x-2 font-medium py-3 px-4 rounded-xl shadow-sm transition-all duration-300 ${
+                isNextDayDisabled()
+                  ? "text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed opacity-50"
+                  : "text-violet-600 bg-white/60 glass-effect border border-violet-200 hover:bg-white/80"
+              }`}
             >
               <span className="text-sm">Tomorrow</span>
               <ChevronRight className="w-4 h-4" />
