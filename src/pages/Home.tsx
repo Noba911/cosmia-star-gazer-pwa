@@ -260,7 +260,7 @@ const Home = () => {
 
       {/* Menu Modal */}
       <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-        <DialogContent className="bg-white/95 glass-effect border-violet-200 shadow-violet max-w-sm mx-auto">
+        <DialogContent className="bg-white border-violet-200 shadow-lg max-w-sm mx-auto">
           <DialogHeader className="pb-4">
             <DialogTitle className="text-xl font-bold text-violet-800 text-center">Menu</DialogTitle>
           </DialogHeader>
@@ -269,18 +269,18 @@ const Home = () => {
             <Button
               onClick={handleNavigateToSettings}
               variant="ghost"
-              className="w-full bg-white/80 glass-effect border border-violet-200 rounded-2xl p-4 h-auto flex items-center justify-start hover:bg-white transition-all duration-300 shadow-sm"
+              className="w-full bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded-xl p-4 h-auto flex items-center justify-start transition-all duration-300 shadow-sm"
             >
-              <Settings className="h-5 w-5 text-violet-500 mr-4" />
+              <Settings className="h-5 w-5 text-violet-600 mr-4" />
               <span className="text-violet-800 font-medium">Settings</span>
             </Button>
 
             <Button
               onClick={handleNavigateToAbout}
               variant="ghost"
-              className="w-full bg-white/80 glass-effect border border-violet-200 rounded-2xl p-4 h-auto flex items-center justify-start hover:bg-white transition-all duration-300 shadow-sm"
+              className="w-full bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded-xl p-4 h-auto flex items-center justify-start transition-all duration-300 shadow-sm"
             >
-              <Info className="h-5 w-5 text-violet-500 mr-4" />
+              <Info className="h-5 w-5 text-violet-600 mr-4" />
               <span className="text-violet-800 font-medium">About Us</span>
             </Button>
           </div>
