@@ -9,16 +9,28 @@ const Home = () => {
 
   const handleStyleSwitch = (style: string) => {
     setActiveStyle(style);
+    console.log(`Switched to ${style} style`);
+    // Here you could trigger a re-generation of the horoscope with the new style
   };
 
   const handlePreviousDay = () => {
-    console.log("Previous day clicked");
+    console.log("Previous day clicked - showing yesterday's horoscope");
     // Add logic to show previous day's horoscope
   };
 
   const handleNextDay = () => {
     console.log("Next day clicked - disabled for future dates");
     // Tomorrow button is disabled in UI
+  };
+
+  const handleMenuClick = () => {
+    console.log("Menu clicked");
+    // Could open a dropdown menu or navigation drawer
+  };
+
+  const handleGenerateNewHoroscope = () => {
+    console.log("Generating new horoscope...");
+    navigate('/ai-generation');
   };
 
   return (
@@ -34,7 +46,10 @@ const Home = () => {
         </div>
         <div className="flex items-center space-x-4">
           <span className="text-xs text-violet-600 font-medium">Mon, July 14</span>
-          <button className="p-2 text-violet-600 hover:text-violet-700 transition-colors">
+          <button 
+            onClick={handleMenuClick}
+            className="p-2 text-violet-600 hover:text-violet-700 transition-colors"
+          >
             <Menu className="w-5 h-5" />
           </button>
         </div>
@@ -118,7 +133,10 @@ const Home = () => {
         {/* Navigation Controls */}
         <section className="mb-8">
           <div className="flex items-center justify-between">
-            <button className="flex items-center space-x-2 text-violet-600 font-medium py-3 px-4 rounded-xl bg-white/60 glass-effect border border-violet-200 shadow-sm transition-all duration-300 hover:bg-white/80">
+            <button 
+              onClick={handlePreviousDay}
+              className="flex items-center space-x-2 text-violet-600 font-medium py-3 px-4 rounded-xl bg-white/60 glass-effect border border-violet-200 shadow-sm transition-all duration-300 hover:bg-white/80"
+            >
               <ChevronLeft className="w-4 h-4" />
               <span className="text-sm">Yesterday</span>
             </button>
@@ -129,11 +147,26 @@ const Home = () => {
               <div className="w-2 h-2 bg-violet-300 rounded-full"></div>
             </div>
             
-            <button className="flex items-center space-x-2 text-gray-400 font-medium py-3 px-4 rounded-xl bg-gray-100 border border-gray-200 shadow-sm cursor-not-allowed opacity-50">
+            <button 
+              onClick={handleNextDay}
+              className="flex items-center space-x-2 text-gray-400 font-medium py-3 px-4 rounded-xl bg-gray-100 border border-gray-200 shadow-sm cursor-not-allowed opacity-50"
+              disabled
+            >
               <span className="text-sm">Tomorrow</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+        </section>
+
+        {/* Generate New Horoscope Button */}
+        <section className="mb-8">
+          <button
+            onClick={handleGenerateNewHoroscope}
+            className="w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-violet transition-all duration-300 hover:from-violet-600 hover:to-purple-700 flex items-center justify-center space-x-2"
+          >
+            <Sparkles className="w-5 h-5" />
+            <span>Generate New Reading</span>
+          </button>
         </section>
       </main>
 
