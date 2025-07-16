@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -79,12 +78,18 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // First, try to sign up without metadata to avoid database type errors
+      // First, try to sign up with user metadata
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: formData.fullName,
+            date_of_birth: formData.dateOfBirth,
+            zodiac_sign: formData.zodiacSign,
+            style_preference: formData.stylePreference
+          }
         }
       });
 
@@ -96,7 +101,7 @@ const Register = () => {
             description: "An account with this email already exists. Please sign in instead.",
             variant: "destructive"
           });
-        } else if (error.message.includes('Database error')) {
+        } else if (error.message.includes('Database error') || error.message.includes('zodiac_sign')) {
           toast({
             title: "Registration Issue",
             description: "There's a temporary issue with user registration. Please try again in a moment.",
@@ -110,46 +115,10 @@ const Register = () => {
           });
         }
       } else {
-        // If signup succeeds, try to create profile separately
-        if (data.user) {
-          try {
-            // Attempt to create profile record
-            const { error: profileError } = await supabase
-              .from('profiles')
-              .insert({
-                id: data.user.id,
-                full_name: formData.fullName,
-                date_of_birth: formData.dateOfBirth,
-                zodiac_sign: formData.zodiacSign,
-                style_preference: formData.stylePreference
-              });
-
-            if (profileError) {
-              console.error('Profile creation error:', profileError);
-              // Don't fail the registration if profile creation fails
-              toast({
-                title: "Registration Complete",
-                description: "Account created successfully! Please check your email to confirm your account. Some profile details may need to be added later.",
-              });
-            } else {
-              toast({
-                title: "Success!",
-                description: "Please check your email to confirm your account before signing in.",
-              });
-            }
-          } catch (profileError) {
-            console.error('Profile creation failed:', profileError);
-            toast({
-              title: "Registration Complete",
-              description: "Account created successfully! Please check your email to confirm your account.",
-            });
-          }
-        } else {
-          toast({
-            title: "Success!",
-            description: "Please check your email to confirm your account before signing in.",
-          });
-        }
+        toast({
+          title: "Success!",
+          description: "Please check your email to confirm your account before signing in.",
+        });
         navigate('/login');
       }
     } catch (error) {
