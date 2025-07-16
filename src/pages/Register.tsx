@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -75,10 +76,26 @@ const Register = () => {
       return;
     }
 
+    if (!formData.fullName || !formData.dateOfBirth || !formData.zodiacSign || !formData.stylePreference) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // First, try to sign up with user metadata
+      console.log('Starting registration with data:', {
+        email: formData.email,
+        fullName: formData.fullName,
+        dateOfBirth: formData.dateOfBirth,
+        zodiacSign: formData.zodiacSign,
+        stylePreference: formData.stylePreference
+      });
+
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -95,26 +112,13 @@ const Register = () => {
 
       if (error) {
         console.error('Sign up error:', error);
-        if (error.message.includes('User already registered')) {
-          toast({
-            title: "Account Exists",
-            description: "An account with this email already exists. Please sign in instead.",
-            variant: "destructive"
-          });
-        } else if (error.message.includes('Database error') || error.message.includes('zodiac_sign')) {
-          toast({
-            title: "Registration Issue",
-            description: "There's a temporary issue with user registration. Please try again in a moment.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Registration Failed",
-            description: error.message,
-            variant: "destructive"
-          });
-        }
+        toast({
+          title: "Registration Failed",
+          description: error.message,
+          variant: "destructive"
+        });
       } else {
+        console.log('Registration successful:', data);
         toast({
           title: "Success!",
           description: "Please check your email to confirm your account before signing in.",
@@ -299,7 +303,7 @@ const Register = () => {
             </Label>
             <Select value={formData.zodiacSign} onValueChange={(value) => handleInputChange('zodiacSign', value)} required>
               <SelectTrigger className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 focus:ring-violet-400 focus:border-transparent">
-                <SelectValue placeholder="Auto-detect from date of birth" />
+                <SelectValue placeholder="Select your zodiac sign" />
               </SelectTrigger>
               <SelectContent className="bg-white border-violet-200">
                 {zodiacSigns.map((sign) => (
