@@ -29,7 +29,7 @@ const Home = () => {
   console.log('Profile data in Home:', profile);
 
   // Generate AI horoscope
-  const { content: aiContent, loading: aiLoading, regenerate } = useAIHoroscope(
+  const { content: aiContent, loading: aiLoading, error: aiError, regenerate } = useAIHoroscope(
     userZodiacSign, 
     userStylePreference || activeStyle.toLowerCase(), 
     currentDate,
@@ -251,19 +251,30 @@ const Home = () => {
                   <span>Consulting the stars...</span>
                 </div>
               </div>
-            ) : (
+            ) : aiContent ? (
               <div className="space-y-4">
                 <blockquote className={`text-gray-700 leading-relaxed text-center ${
                   effectiveStyle === "Poetic" ? "italic" : "font-medium"
                 }`}>
-                  "{aiContent?.quote || "The stars are preparing your personalized message..."}"
+                  "{aiContent.quote}"
                 </blockquote>
                 
                 <div className="bg-violet-50 rounded-2xl p-4 border border-violet-200">
                   <p className="text-sm text-violet-700 leading-relaxed">
-                    {aiContent?.description || "Your cosmic guidance is being channeled..."}
+                    {aiContent.description}
                   </p>
                 </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-center text-orange-600">
+                  <span>Unable to generate horoscope content at this time</span>
+                </div>
+                {aiError && (
+                  <div className="text-xs text-red-500 text-center">
+                    Error: {aiError}
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -19,6 +19,7 @@ export const useAIHoroscope = (zodiacSign: string, style: string, date: Date, fu
 
     setLoading(true);
     setError(null);
+    setContent(null); // Clear previous content
 
     try {
       const { data, error: functionError } = await supabase.functions.invoke('generate-horoscope', {
@@ -34,15 +35,21 @@ export const useAIHoroscope = (zodiacSign: string, style: string, date: Date, fu
         throw functionError;
       }
 
-      setContent(data);
+      // Validate that we received proper content
+      if (data && data.quote && data.description) {
+        setContent(data);
+      } else {
+        throw new Error('Invalid response format from AI service');
+      }
     } catch (err) {
       console.error('Error generating horoscope:', err);
-      setError(err instanceof Error ? err.message : 'Failed to generate horoscope');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate horoscope';
+      setError(errorMessage);
       
-      // Fallback content
+      // Provide meaningful fallback content
       setContent({
-        quote: "The cosmic energies are realigning. Your unique path forward will become clear soon.",
-        description: "Sometimes the universe needs a moment to prepare the perfect message for you. Trust in your inner strength today."
+        quote: "The stars are preparing something special for you today. Trust in your inner wisdom and embrace the opportunities that come your way.",
+        description: "Today brings a chance for growth and positive energy. Stay open to new possibilities and trust your instincts."
       });
 
       toast({
