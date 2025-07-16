@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          full_name: string
+          id: string
+          style_preference:
+            | Database["public"]["Enums"]["horoscope_style"]
+            | null
+          updated_at: string
+          zodiac_sign: Database["public"]["Enums"]["zodiac_sign"] | null
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name: string
+          id: string
+          style_preference?:
+            | Database["public"]["Enums"]["horoscope_style"]
+            | null
+          updated_at?: string
+          zodiac_sign?: Database["public"]["Enums"]["zodiac_sign"] | null
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name?: string
+          id?: string
+          style_preference?:
+            | Database["public"]["Enums"]["horoscope_style"]
+            | null
+          updated_at?: string
+          zodiac_sign?: Database["public"]["Enums"]["zodiac_sign"] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +58,20 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      horoscope_style: "poetic" | "classic" | "daily-tip"
+      zodiac_sign:
+        | "aries"
+        | "taurus"
+        | "gemini"
+        | "cancer"
+        | "leo"
+        | "virgo"
+        | "libra"
+        | "scorpio"
+        | "sagittarius"
+        | "capricorn"
+        | "aquarius"
+        | "pisces"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +198,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      horoscope_style: ["poetic", "classic", "daily-tip"],
+      zodiac_sign: [
+        "aries",
+        "taurus",
+        "gemini",
+        "cancer",
+        "leo",
+        "virgo",
+        "libra",
+        "scorpio",
+        "sagittarius",
+        "capricorn",
+        "aquarius",
+        "pisces",
+      ],
+    },
   },
 } as const

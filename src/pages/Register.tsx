@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,10 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import SocialLoginButton from '@/components/SocialLoginButton';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '', 
@@ -42,23 +45,133 @@ const Register = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Registration form submitted:', formData);
-    // Handle registration logic here - for now navigate to home
-    navigate('/home');
+    
+    if (!formData.agreedToTerms) {
+      toast({
+        title: "Terms Required",
+        description: "Please agree to the Terms of Use and Privacy Policy",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: formData.fullName,
+            date_of_birth: formData.dateOfBirth,
+            zodiac_sign: formData.zodiacSign,
+            style_preference: formData.stylePreference
+          }
+        }
+      });
+
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          toast({
+            title: "Account Exists",
+            description: "An account with this email already exists. Please sign in instead.",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Registration Failed",
+            description: error.message,
+            variant: "destructive"
+          });
+        }
+      } else {
+        toast({
+          title: "Success!",
+          description: "Please check your email to confirm your account before signing in.",
+        });
+        navigate('/login');
+      }
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google registration clicked");
-    // Add Google OAuth logic here
-    navigate('/home');
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/home`
+        }
+      });
+
+      if (error) {
+        toast({
+          title: "Google Sign Up Failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Google Sign Up Failed",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleAppleLogin = () => {
-    console.log("Apple registration clicked");
-    // Add Apple OAuth logic here
-    navigate('/home');
+  const handleAppleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/home`
+        }
+      });
+
+      if (error) {
+        toast({
+          title: "Apple Sign Up Failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Apple Sign Up Failed",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -97,6 +210,7 @@ const Register = () => {
               value={formData.fullName}
               onChange={(e) => handleInputChange('fullName', e.target.value)}
               className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 placeholder-violet-400 focus:ring-violet-400 focus:border-transparent"
+              required
             />
           </div>
 
@@ -111,6 +225,7 @@ const Register = () => {
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 placeholder-violet-400 focus:ring-violet-400 focus:border-transparent"
+              required
             />
           </div>
 
@@ -126,6 +241,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 pr-12 text-violet-800 placeholder-violet-400 focus:ring-violet-400 focus:border-transparent"
+                required
               />
               <Button
                 type="button"
@@ -150,6 +266,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 placeholder-violet-400 focus:ring-violet-400 focus:border-transparent"
+              required
             />
           </div>
 
@@ -163,6 +280,7 @@ const Register = () => {
               value={formData.dateOfBirth}
               onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
               className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 focus:ring-violet-400 focus:border-transparent"
+              required
             />
           </div>
 
@@ -170,7 +288,7 @@ const Register = () => {
             <Label className="block text-sm font-medium text-violet-800 mb-2">
               Zodiac Sign
             </Label>
-            <Select value={formData.zodiacSign} onValueChange={(value) => handleInputChange('zodiacSign', value)}>
+            <Select value={formData.zodiacSign} onValueChange={(value) => handleInputChange('zodiacSign', value)} required>
               <SelectTrigger className="w-full bg-white/80 glass-effect border-violet-200 rounded-xl px-4 py-3 text-violet-800 focus:ring-violet-400 focus:border-transparent">
                 <SelectValue placeholder="Auto-detect from date of birth" />
               </SelectTrigger>
@@ -202,6 +320,7 @@ const Register = () => {
                     checked={formData.stylePreference === style.value}
                     onChange={(e) => handleInputChange('stylePreference', e.target.value)}
                     className="text-violet-600 focus:ring-violet-400"
+                    required
                   />
                   <span className="text-violet-700 font-medium">{style.label}</span>
                 </label>
@@ -227,10 +346,11 @@ const Register = () => {
 
           <Button
             type="submit"
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 px-6 rounded-2xl shadow-violet transition-all duration-300 transform hover:scale-105"
+            disabled={isLoading}
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 px-6 rounded-2xl shadow-violet transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Star className="h-4 w-4 mr-2" />
-            Create Account
+            {isLoading ? "Creating Account..." : "Create Account"}
           </Button>
         </form>
 
