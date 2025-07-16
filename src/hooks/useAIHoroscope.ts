@@ -2,11 +2,15 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Database } from '@/integrations/supabase/types';
 
 interface HoroscopeContent {
   quote: string;
   description: string;
 }
+
+type ZodiacSign = Database['public']['Enums']['zodiac_sign'];
+type HoroscopeStyle = Database['public']['Enums']['horoscope_style'];
 
 export const useAIHoroscope = (zodiacSign: string, style: string, date: Date, fullName: string) => {
   const [content, setContent] = useState<HoroscopeContent | null>(null);
@@ -28,8 +32,8 @@ export const useAIHoroscope = (zodiacSign: string, style: string, date: Date, fu
       const { data: existingHoroscope, error: fetchError } = await supabase
         .from('horoscope_history')
         .select('quote, description')
-        .eq('zodiac_sign', zodiacSign)
-        .eq('style', style)
+        .eq('zodiac_sign', zodiacSign as ZodiacSign)
+        .eq('style', style as HoroscopeStyle)
         .eq('date', dateString)
         .maybeSingle();
 
