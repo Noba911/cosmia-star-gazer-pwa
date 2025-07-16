@@ -19,14 +19,40 @@ export const useAIHoroscope = (zodiacSign: string, style: string, date: Date, fu
 
     setLoading(true);
     setError(null);
-    setContent(null); // Clear previous content
+    setContent(null);
 
     try {
+      const dateString = date.toISOString().split('T')[0];
+      
+      // First, check if we already have a horoscope for this combination
+      const { data: existingHoroscope, error: fetchError } = await supabase
+        .from('horoscope_history')
+        .select('quote, description')
+        .eq('zodiac_sign', zodiacSign)
+        .eq('style', style)
+        .eq('date', dateString)
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Error fetching existing horoscope:', fetchError);
+      }
+
+      if (existingHoroscope) {
+        // Use existing horoscope
+        setContent({
+          quote: existingHoroscope.quote,
+          description: existingHoroscope.description
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Generate new horoscope if none exists
       const { data, error: functionError } = await supabase.functions.invoke('generate-horoscope', {
         body: {
           zodiacSign,
           style,
-          date: date.toISOString().split('T')[0],
+          date: dateString,
           fullName
         }
       });

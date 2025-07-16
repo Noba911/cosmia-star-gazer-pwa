@@ -1,8 +1,11 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.51.0';
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,6 +19,22 @@ serve(async (req) => {
 
   try {
     const { zodiacSign, style, date, fullName } = await req.json();
+
+    // Create Supabase client with service role key for admin access
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Get the current user's ID from the request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('No authorization header');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+    
+    if (userError || !user) {
+      throw new Error('Invalid or expired token');
+    }
 
     const stylePrompts = {
       poetic: "Write in a mystical, poetic style with beautiful metaphors and celestial imagery. Use flowing, artistic language that feels magical and inspiring.",
@@ -78,13 +97,34 @@ Do not include any markdown, explanations, or text outside the JSON object. Keep
       console.log('Failed content:', data.choices[0].message.content);
       
       // Fallback: extract content manually if JSON parsing fails
-      const content = data.choices[0].message.content;
-      const lines = content.split('\n').filter(line => line.trim());
-      
       horoscopeContent = {
         quote: "The stars are aligning in your favor today. Trust your intuition and embrace the opportunities that come your way.",
         description: "Your cosmic energy is particularly strong right now. Focus on positive thoughts and actions to manifest your desires."
       };
+    }
+
+    // Save the horoscope to the database for future consistency
+    try {
+      const { error: insertError } = await supabase
+        .from('horoscope_history')
+        .insert({
+          user_id: user.id,
+          zodiac_sign: zodiacSign,
+          style: style,
+          date: date,
+          quote: horoscopeContent.quote,
+          description: horoscopeContent.description
+        });
+
+      if (insertError) {
+        console.error('Error saving horoscope to database:', insertError);
+        // Don't throw here - we still want to return the generated content
+      } else {
+        console.log('Horoscope saved to database successfully');
+      }
+    } catch (dbError) {
+      console.error('Database save error:', dbError);
+      // Continue - don't let database errors prevent returning content
     }
 
     console.log('Final horoscope content:', horoscopeContent);

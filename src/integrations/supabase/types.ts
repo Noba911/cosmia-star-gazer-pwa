@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      horoscope_history: {
+        Row: {
+          created_at: string
+          date: string
+          description: string
+          id: string
+          quote: string
+          style: Database["public"]["Enums"]["horoscope_style"]
+          user_id: string
+          zodiac_sign: Database["public"]["Enums"]["zodiac_sign"]
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          quote: string
+          style: Database["public"]["Enums"]["horoscope_style"]
+          user_id: string
+          zodiac_sign: Database["public"]["Enums"]["zodiac_sign"]
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          quote?: string
+          style?: Database["public"]["Enums"]["horoscope_style"]
+          user_id?: string
+          zodiac_sign?: Database["public"]["Enums"]["zodiac_sign"]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
