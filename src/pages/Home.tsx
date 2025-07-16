@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Home as HomeIcon, Settings, Info, ChevronLeft, ChevronRight, Sparkles, Menu, Star, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -20,9 +20,12 @@ const Home = () => {
      userStylePreference.charAt(0).toUpperCase() + userStylePreference.slice(1)) : 
     activeStyle;
 
-  // Use user's zodiac sign or default to Leo
+  // Use user's zodiac sign or default to Leo - this is the key fix
   const userZodiacSign = profile?.zodiac_sign || 'leo';
   const zodiacDisplayName = userZodiacSign.charAt(0).toUpperCase() + userZodiacSign.slice(1);
+  
+  console.log('Current user zodiac sign:', userZodiacSign);
+  console.log('Profile data in Home:', profile);
   
   // Zodiac sign emojis
   const zodiacEmojis = {
@@ -75,6 +78,36 @@ const Home = () => {
           description: "Take time for reflection and planning today. Your natural wisdom and maturity will help you make important decisions that benefit your long-term goals."
         }
       ],
+      virgo: [
+        {
+          quote: "Mercury, your ruling planet, bestows upon you clarity of thought and precision of action today, dear Virgo. Your analytical mind cuts through confusion like a sharp blade through silk.",
+          description: "Your attention to detail serves you well today. Focus on organizing your thoughts and environment. Small improvements will lead to significant results."
+        },
+        {
+          quote: "The earth element grounds your energy today, practical Virgo, while celestial wisdom flows through your methodical approach to life's challenges.",
+          description: "Trust in your systematic approach to problem-solving. Your natural tendency to perfect and refine will bring remarkable outcomes."
+        },
+        {
+          quote: "Venus whispers secrets of harmony to your perfectionist soul, reminding you that true beauty lies in the balance between effort and acceptance.",
+          description: "Focus on health and wellness today. Your body and mind crave order and nourishment. Listen to their needs with compassion."
+        },
+        {
+          quote: "The cosmic energies favor your meticulous nature, dear Virgo. Every detail you attend to today weaves into tomorrow's masterpiece.",
+          description: "Professional matters receive favorable cosmic support. Your reliability and expertise will be recognized and appreciated."
+        },
+        {
+          quote: "Saturn's influence strengthens your resolve and rewards your patience. Like a gardener tending to precious seeds, your careful nurturing bears fruit.",
+          description: "Long-term goals come into focus. Your practical wisdom guides you toward sustainable success and meaningful achievements."
+        },
+        {
+          quote: "The Moon reflects your inner wisdom, wise Virgo, illuminating the path between perfection and progress with gentle understanding.",
+          description: "Emotional balance is key today. Don't let perfectionism overshadow your accomplishments. Celebrate your progress and growth."
+        },
+        {
+          quote: "Jupiter expands your capacity for service and healing, generous Virgo. Your helping hand becomes a beacon of hope for others.",
+          description: "Opportunities to help others present themselves. Your practical skills and caring nature make you a valuable ally and trusted friend."
+        }
+      ],
       cancer: [
         {
           quote: "The moon's gentle embrace surrounds you today, dear Cancer. Your intuitive powers are heightened, and emotional healing flows through your compassionate heart like a healing river.",
@@ -84,7 +117,6 @@ const Home = () => {
           quote: "Neptune's mystical waters wash over your soul, Cancer, cleansing away old wounds and making space for new love to bloom in your tender heart.",
           description: "A day of emotional renewal awaits. Pay attention to your dreams and inner voice - they hold important messages about your future path."
         }
-        // Add more content for other signs as needed
       ],
       // Add content for other zodiac signs...
     };
@@ -120,12 +152,41 @@ const Home = () => {
           description: "Legal matters resolve in your favor. Long-distance relationships receive positive cosmic energy. Lucky numbers: 10, 19, 30. Lucky color: Copper."
         }
       ],
+      virgo: [
+        {
+          quote: "Virgo individuals experience excellent prospects in professional endeavors today. Your analytical skills and attention to detail bring recognition from superiors.",
+          description: "Health matters require careful attention. Avoid stress and maintain regular routines. Lucky numbers: 6, 14, 23. Lucky color: Navy blue."
+        },
+        {
+          quote: "Financial planning and investments favor Virgo natives. Your practical approach to money management yields positive results.",
+          description: "Educational pursuits and skill development are highlighted. Communication with colleagues brings productive outcomes. Lucky numbers: 2, 11, 18. Lucky color: Green."
+        },
+        {
+          quote: "Domestic harmony and family relationships bring satisfaction to Virgo individuals. Your organized approach resolves household matters efficiently.",
+          description: "Property dealings and home improvements receive cosmic blessing. Avoid hasty decisions in personal matters. Lucky numbers: 4, 15, 27. Lucky color: Brown."
+        },
+        {
+          quote: "Health and wellness are strongly favored for Virgo today. Your disciplined lifestyle and careful diet choices show positive results.",
+          description: "Service-oriented activities bring fulfillment. Your helpful nature attracts gratitude and good karma. Lucky numbers: 7, 16, 25. Lucky color: White."
+        },
+        {
+          quote: "Professional partnerships and collaborations prove highly beneficial for Virgo natives. Your reliability makes you a sought-after team member.",
+          description: "Technical skills and expertise are in demand. Focus on precision and quality in all work-related tasks. Lucky numbers: 9, 19, 28. Lucky color: Gray."
+        },
+        {
+          quote: "Virgo individuals find success in detailed analysis and research work. Your methodical approach uncovers important insights.",
+          description: "Travel for work purposes brings positive outcomes. Maintain diplomatic relations with business associates. Lucky numbers: 1, 13, 22. Lucky color: Silver."
+        },
+        {
+          quote: "Administrative tasks and organizational responsibilities favor Virgo today. Your efficient management style impresses decision-makers.",
+          description: "Legal matters and documentation work proceed smoothly. Your careful attention prevents errors and delays. Lucky numbers: 5, 17, 29. Lucky color: Beige."
+        }
+      ],
       cancer: [
         {
           quote: "Cancer individuals will experience harmony in family relationships today. Your caring nature brings comfort to those around you.",
           description: "Domestic matters receive positive cosmic support. Financial stability improves. Lucky numbers: 2, 6, 16. Lucky color: Silver."
         }
-        // Add more content for other signs...
       ],
       // Add content for other zodiac signs...
     };
@@ -161,12 +222,41 @@ const Home = () => {
           description: "Focus action: Set a small, achievable goal for tomorrow. Your natural determination will help you follow through and build momentum."
         }
       ],
+      virgo: [
+        {
+          quote: "Virgo productivity tip: Create a detailed to-do list this morning and prioritize tasks by importance. Your organized approach will maximize efficiency.",
+          description: "Focus action: Declutter one area of your workspace or home. A clean, organized environment will boost your mental clarity and productivity."
+        },
+        {
+          quote: "Virgo wellness tip: Pay attention to your body's signals today. Take breaks when needed and nourish yourself with healthy, wholesome foods.",
+          description: "Focus action: Review and update your health routines. Small adjustments to your diet or exercise habits will yield significant long-term benefits."
+        },
+        {
+          quote: "Virgo mindfulness tip: Practice patience with yourself and others today. Perfection is a journey, not a destination.",
+          description: "Focus action: Help someone with a task or project. Your practical skills and caring nature will make a meaningful difference in their day."
+        },
+        {
+          quote: "Virgo learning tip: Dedicate 15 minutes to learning something new or improving an existing skill. Your analytical mind absorbs information efficiently.",
+          description: "Focus action: Write down three things you accomplished today, no matter how small. Acknowledging your progress builds confidence and momentum."
+        },
+        {
+          quote: "Virgo relationship tip: Express appreciation for someone who supports you. Your thoughtful words will strengthen your connection.",
+          description: "Focus action: Plan or prepare for an upcoming goal or project. Your careful preparation will ensure smooth execution when the time comes."
+        },
+        {
+          quote: "Virgo financial tip: Review your budget or expenses for areas of improvement. Your attention to detail can identify money-saving opportunities.",
+          description: "Focus action: Practice deep breathing for 5 minutes to center yourself. Your calm, grounded energy will influence your entire day positively."
+        },
+        {
+          quote: "Virgo service tip: Volunteer or offer assistance to someone in need. Your helpful nature creates positive ripples in the community.",
+          description: "Focus action: Set boundaries around your time and energy. Saying no to non-essential commitments preserves your resources for what matters most."
+        }
+      ],
       cancer: [
         {
           quote: "Cancer wellness tip: Take time for self-care today. A warm bath or peaceful meditation will restore your emotional balance.",
           description: "Focus action: Reach out to a family member or close friend. Your intuitive nature will know exactly what they need to hear."
         }
-        // Add more content for other signs...
       ],
       // Add content for other zodiac signs...
     };

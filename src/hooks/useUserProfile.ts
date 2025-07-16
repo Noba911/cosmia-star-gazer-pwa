@@ -20,6 +20,7 @@ export const useUserProfile = () => {
       
       if (!user) {
         console.log('No authenticated user found');
+        setProfile(null);
         return;
       }
 
@@ -40,7 +41,7 @@ export const useUserProfile = () => {
         return;
       }
 
-      console.log('Profile data:', data);
+      console.log('Profile data fetched:', data);
       setProfile(data);
     } catch (error) {
       console.error('Exception fetching profile:', error);
