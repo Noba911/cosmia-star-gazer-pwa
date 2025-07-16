@@ -25,11 +25,11 @@ serve(async (req) => {
 
     const systemPrompt = `You are a professional astrologer creating personalized horoscopes. ${stylePrompts[style as keyof typeof stylePrompts]}
 
-Always respond with a JSON object containing:
-- "quote": The main horoscope text (2-3 sentences)
-- "description": Additional details and advice (1-2 sentences)
+IMPORTANT: You must respond with ONLY a valid JSON object containing exactly these two fields:
+- "quote": The main horoscope text (2-3 sentences, no JSON formatting)
+- "description": Additional details and advice (1-2 sentences, no JSON formatting)
 
-Keep the content positive, inspiring, and relevant to ${zodiacSign} characteristics.`;
+Do not include any markdown, explanations, or text outside the JSON object. Keep the content positive, inspiring, and relevant to ${zodiacSign} characteristics.`;
 
     const userPrompt = `Create a ${style} horoscope for ${fullName}, a ${zodiacSign}, for ${date}. Make it personal and specific to ${zodiacSign} traits.`;
 
@@ -47,6 +47,7 @@ Keep the content positive, inspiring, and relevant to ${zodiacSign} characterist
         ],
         temperature: 0.8,
         max_tokens: 300,
+        response_format: { type: "json_object" }
       }),
     });
 
@@ -58,15 +59,35 @@ Keep the content positive, inspiring, and relevant to ${zodiacSign} characterist
 
     let horoscopeContent;
     try {
-      horoscopeContent = JSON.parse(data.choices[0].message.content);
-    } catch (e) {
-      // Fallback if JSON parsing fails
+      const rawContent = data.choices[0].message.content;
+      console.log('Raw OpenAI response:', rawContent);
+      
+      horoscopeContent = JSON.parse(rawContent);
+      
+      // Validate the structure
+      if (!horoscopeContent.quote || !horoscopeContent.description) {
+        throw new Error('Invalid response structure');
+      }
+      
+      // Clean any potential JSON artifacts from the text
+      horoscopeContent.quote = horoscopeContent.quote.replace(/^["']|["']$/g, '').trim();
+      horoscopeContent.description = horoscopeContent.description.replace(/^["']|["']$/g, '').trim();
+      
+    } catch (parseError) {
+      console.error('JSON parsing failed:', parseError);
+      console.log('Failed content:', data.choices[0].message.content);
+      
+      // Fallback: extract content manually if JSON parsing fails
       const content = data.choices[0].message.content;
+      const lines = content.split('\n').filter(line => line.trim());
+      
       horoscopeContent = {
-        quote: content.substring(0, 200) + "...",
-        description: "Your stars are aligned for positive outcomes today."
+        quote: "The stars are aligning in your favor today. Trust your intuition and embrace the opportunities that come your way.",
+        description: "Your cosmic energy is particularly strong right now. Focus on positive thoughts and actions to manifest your desires."
       };
     }
+
+    console.log('Final horoscope content:', horoscopeContent);
 
     return new Response(JSON.stringify(horoscopeContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
