@@ -319,7 +319,39 @@ const Home = () => {
           </section>
         )}
 
-        {/* Cosmic Tip */}
+        {/* Navigation Controls - MOVED ABOVE COSMIC TIP */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between">
+            <button 
+              onClick={handlePreviousDay}
+              className="flex items-center space-x-2 text-violet-600 font-medium py-3 px-4 rounded-xl bg-white/60 glass-effect border border-violet-200 shadow-sm transition-all duration-300 hover:bg-white/80"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-sm">Yesterday</span>
+            </button>
+            
+            <div className="flex space-x-2">
+              <div className="w-2 h-2 bg-violet-300 rounded-full"></div>
+              <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
+              <div className="w-2 h-2 bg-violet-300 rounded-full"></div>
+            </div>
+            
+            <button 
+              onClick={handleNextDay}
+              disabled={isNextDayDisabled()}
+              className={`flex items-center space-x-2 font-medium py-3 px-4 rounded-xl shadow-sm transition-all duration-300 ${
+                isNextDayDisabled()
+                  ? "text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed opacity-50"
+                  : "text-violet-600 bg-white/60 glass-effect border border-violet-200 hover:bg-white/80"
+              }`}
+            >
+              <span className="text-sm">Tomorrow</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </section>
+
+        {/* Cosmic Tip - NOW BELOW NAVIGATION */}
         <section className="mb-8">
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-5 shadow-violet">
             <div className="flex items-center justify-between mb-3">
@@ -353,38 +385,6 @@ const Home = () => {
             <p className="text-white/70 text-xs">
               {formatDate(cosmicTipDate)}
             </p>
-          </div>
-        </section>
-
-        {/* Navigation Controls */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between">
-            <button 
-              onClick={handlePreviousDay}
-              className="flex items-center space-x-2 text-violet-600 font-medium py-3 px-4 rounded-xl bg-white/60 glass-effect border border-violet-200 shadow-sm transition-all duration-300 hover:bg-white/80"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="text-sm">Yesterday</span>
-            </button>
-            
-            <div className="flex space-x-2">
-              <div className="w-2 h-2 bg-violet-300 rounded-full"></div>
-              <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
-              <div className="w-2 h-2 bg-violet-300 rounded-full"></div>
-            </div>
-            
-            <button 
-              onClick={handleNextDay}
-              disabled={isNextDayDisabled()}
-              className={`flex items-center space-x-2 font-medium py-3 px-4 rounded-xl shadow-sm transition-all duration-300 ${
-                isNextDayDisabled()
-                  ? "text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed opacity-50"
-                  : "text-violet-600 bg-white/60 glass-effect border border-violet-200 hover:bg-white/80"
-              }`}
-            >
-              <span className="text-sm">Tomorrow</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
           </div>
         </section>
 
