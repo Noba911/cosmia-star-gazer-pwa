@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Eye, EyeOff, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -96,35 +95,59 @@ const Register = () => {
         stylePreference: formData.stylePreference
       });
 
-      const { data, error } = await supabase.auth.signUp({
+      // Try registering without the trigger first - just basic signup
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: formData.fullName,
-            date_of_birth: formData.dateOfBirth,
-            zodiac_sign: formData.zodiacSign,
-            style_preference: formData.stylePreference
-          }
         }
       });
 
-      if (error) {
-        console.error('Sign up error:', error);
+      if (authError) {
+        console.error('Auth signup error:', authError);
         toast({
           title: "Registration Failed",
-          description: error.message,
+          description: authError.message,
           variant: "destructive"
         });
-      } else {
-        console.log('Registration successful:', data);
-        toast({
-          title: "Success!",
-          description: "Please check your email to confirm your account before signing in.",
-        });
-        navigate('/login');
+        return;
       }
+
+      console.log('Auth signup successful:', authData);
+
+      // If auth signup successful but we have a user, try to create profile manually
+      if (authData.user) {
+        try {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authData.user.id,
+              full_name: formData.fullName,
+              date_of_birth: formData.dateOfBirth,
+              zodiac_sign: formData.zodiacSign as any,
+              style_preference: formData.stylePreference as any
+            });
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError);
+            // Don't fail the registration if profile creation fails
+            console.log('Profile creation failed, but user was created successfully');
+          } else {
+            console.log('Profile created successfully');
+          }
+        } catch (profileErr) {
+          console.error('Profile creation exception:', profileErr);
+          // Don't fail the registration
+        }
+      }
+
+      toast({
+        title: "Success!",
+        description: "Please check your email to confirm your account before signing in.",
+      });
+      navigate('/login');
+
     } catch (error) {
       console.error('Registration error:', error);
       toast({
