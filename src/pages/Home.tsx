@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useAIHoroscope } from "@/hooks/useAIHoroscope";
+import SwipeableCosmicTip from "@/components/SwipeableCosmicTip";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -351,42 +352,15 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Cosmic Tip - NOW BELOW NAVIGATION */}
-        <section className="mb-8">
-          <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-5 shadow-violet">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <Sparkles className="w-5 h-5 text-white mr-2" />
-                <h4 className="text-white font-semibold">Cosmic Tip</h4>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={handleCosmicTipPrevious}
-                  className="p-1 text-white/80 hover:text-white transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleCosmicTipNext}
-                  disabled={isCosmicTipNextDisabled()}
-                  className={`p-1 transition-colors ${
-                    isCosmicTipNextDisabled() 
-                      ? "text-white/40 cursor-not-allowed" 
-                      : "text-white/80 hover:text-white"
-                  }`}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <p className="text-white/90 text-sm leading-relaxed mb-2">
-              {getCosmicTip(cosmicTipDate)}
-            </p>
-            <p className="text-white/70 text-xs">
-              {formatDate(cosmicTipDate)}
-            </p>
-          </div>
-        </section>
+        {/* Swipeable Cosmic Tip - NOW BELOW NAVIGATION */}
+        <SwipeableCosmicTip
+          cosmicTipDate={cosmicTipDate}
+          onPrevious={handleCosmicTipPrevious}
+          onNext={handleCosmicTipNext}
+          isNextDisabled={isCosmicTipNextDisabled()}
+          getCosmicTip={getCosmicTip}
+          formatDate={formatDate}
+        />
 
         {/* Generate New Horoscope Button */}
         <section className="mb-8">
