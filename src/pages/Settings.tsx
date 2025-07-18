@@ -12,10 +12,12 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signOut } = useAuth();
   const { profile, loading, updating, updateProfile } = useUserProfile();
   
   const [profileData, setProfileData] = useState({
@@ -111,16 +113,16 @@ const Settings = () => {
 
   const handleLogout = async () => {
     console.log('Logging out...');
-    const { error } = await supabase.auth.signOut();
-    if (error) {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
       console.error('Logout error:', error);
       toast({
         title: "Error",
         description: "Failed to log out",
         variant: "destructive"
       });
-    } else {
-      navigate('/login');
     }
   };
 

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, Sparkles, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import HoroscopeCard from "../components/HoroscopeCard";
 import SocialLoginButton from "../components/SocialLoginButton";
 import ContactModal from "../components/ContactModal";
@@ -25,7 +26,16 @@ const horoscopeData = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  // Redirect authenticated users to home
+  useEffect(() => {
+    if (!loading && user) {
+      console.log('User already authenticated, redirecting to home');
+      navigate('/home');
+    }
+  }, [user, loading, navigate]);
 
   const handleSignUp = () => {
     console.log("Sign up clicked");
